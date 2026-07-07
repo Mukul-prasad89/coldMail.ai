@@ -54,16 +54,52 @@ function App() {
             </span>
           </motion.div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight mb-6">
-            Turn Hiring Needs into {' '}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+            <span className="whitespace-nowrap">Turn Client's Hiring Needs into</span>{' '}
             <span className="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
               Business Opportunities
             </span>
           </h1>
 
-          <p className="text-gray-400 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-            ColdMail AI reads public hiring pages, extracts required technical skills, matches them against your internal talent database using semantic search, and generates personalized business development emails to help IT service companies win new projects.
-          </p>
+          <div className="mb-10 w-full max-w-4xl mx-auto">
+            <div className="relative p-[1px] rounded-2xl bg-gradient-to-r from-purple-900/40 via-purple-600/50 to-purple-900/40">
+              <div className="rounded-2xl bg-dark-800/90 backdrop-blur-sm p-6">
+                <div className="grid grid-cols-7 gap-1 items-start">
+                  {[
+                    { step: '1', label: 'Client URL', icon: '🔗', desc: 'Enters website' },
+                    { step: '2', label: 'LangChain', icon: '🕸️', desc: 'Web scrapes' },
+                    { step: '3', label: 'LLM', icon: '🧠', desc: 'Extract roles' },
+                    { step: '4', label: 'JSON', icon: '📋', desc: 'Job roles' },
+                    { step: '5', label: 'Vector DB', icon: '🗄️', desc: 'Semantic search' },
+                    { step: '6', label: 'Match', icon: '🎯', desc: 'Finds talent' },
+                    { step: '7', label: 'LLM Draft', icon: '✍️', desc: 'Writes email' },
+                  ].map((item, i) => (
+                    <motion.div
+                      key={item.step}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * i, duration: 0.4 }}
+                      className="flex flex-col items-center text-center"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-dark-700 border border-purple-700/30 flex items-center justify-center mb-2 relative">
+                        <span className="text-lg">{item.icon}</span>
+                        {i < 6 && (
+                          <div className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 items-center">
+                            <svg className="w-6 h-4 text-purple-500" viewBox="0 0 40 12" fill="none">
+                              <path d="M2 6h30" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 3" />
+                              <path d="M30 2l6 4-6 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-white text-xs font-semibold">{item.label}</span>
+                      <span className="text-gray-600 text-[10px] mt-0.5">{item.desc}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         <motion.form
