@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
 function Home() {
-  console.log(import.meta.env.VITE_API_URL)
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [timer, setTimer] = useState(10)
@@ -32,7 +31,8 @@ function Home() {
     }, 1000)
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/generate-email`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://cold-mail-ai.onrender.com'
+      const res = await fetch(`${apiUrl}/api/generate-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: url.trim() }),
