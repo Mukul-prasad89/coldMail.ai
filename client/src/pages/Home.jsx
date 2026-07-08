@@ -31,7 +31,7 @@ function Home() {
     }, 1000)
 
     try {
-      const res = await fetch('https://cold-mail-ai.onrender.com/api/generate-email', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/generate-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: url.trim() }),
