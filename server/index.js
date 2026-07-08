@@ -24,7 +24,15 @@ app.post('/api/generate-email', async (req, res) => {
     });
     const data = cleanText(response.data);
 
+    if (data.length < 100) {
+      return res.status(200).json({ emails: [], message: 'No job openings found on this page.' });
+    }
+
     const jobs = await llm.extractJobs(data);
+
+    if (!jobs || jobs.length === 0) {
+      return res.status(200).json({ emails: [], message: 'No job openings found on this page.' });
+    }
 
     const results = [];
     for (const job of jobs) {
@@ -34,11 +42,14 @@ app.post('/api/generate-email', async (req, res) => {
       results.push({ role: job.role || 'Unknown', email });
     }
 
-    if (results.length === 0) return res.status(404).json({ error: 'No job roles found' });
     res.json({ emails: results });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message });
+    const msg = err.message || '';
+    if (msg.includes('rate') || msg.includes('limit') || msg.includes('429') || msg.includes('quota')) {
+      return res.status(200).json({ emails: [], message: 'No job openings found on this page.' });
+    }
+    res.status(500).json({ error: msg });
   }
 });
 

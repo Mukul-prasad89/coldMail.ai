@@ -31,13 +31,19 @@ function Home() {
     }, 1000)
 
     try {
-      const res = await fetch('http://localhost:8000/api/generate-email', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/generate-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: url.trim() }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
+      if (data.message) {
+        setError(data.message)
+        setLoading(false)
+        if (intervalRef.current) clearInterval(intervalRef.current)
+        return
+      }
       setEmails(data.emails)
     } catch (err) {
       setError(err.message)
