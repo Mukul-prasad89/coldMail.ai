@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 
 function Home() {
+  console.log(import.meta.env.VITE_API_URL)
   const [url, setUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [timer, setTimer] = useState(10)
