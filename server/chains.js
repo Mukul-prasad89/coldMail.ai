@@ -1,7 +1,10 @@
 require('dotenv').config();
 const { ChatGroq } = require('@langchain/groq');
 const { PromptTemplate } = require('@langchain/core/prompts');
-const { JsonOutputParser } = require('@langchain/core/output_parsers');
+
+function truncate(text, maxLen = 3000) {
+  return text.length > maxLen ? text.slice(0, maxLen) : text;
+}
 
 class Chain {
   constructor() {
@@ -19,12 +22,18 @@ class Chain {
 ### INSTRUCTION:
 The scraped text is from the career's page of a website.
 Your job is to extract the job postings and return them in JSON format containing the following keys: \`role\`, \`experience\`, \`skills\` and \`description\`.
-Only return the valid JSON.
-### VALID JSON (NO PREAMBLE):
+Only return the valid JSON array. NO markdown, NO code fences, NO commentary.
+### VALID JSON:
 `);
-    const chain = prompt.pipe(this.llm).pipe(new JsonOutputParser());
-    const res = await chain.invoke({ page_data: cleanedText });
-    return Array.isArray(res) ? res : [res];
+    const chain = prompt.pipe(this.llm);
+    const res = await chain.invoke({ page_data: truncate(cleanedText, 3000) });
+    let jsonStr = res.content.trim();
+    const fenceMatch = jsonStr.match(/```(?:json)?\n([\s\S]*?)```/);
+    if (fenceMatch) jsonStr = fenceMatch[1].trim();
+    const bracketMatch = jsonStr.match(/(\[[\s\S]*\])/);
+    if (bracketMatch) jsonStr = bracketMatch[1].trim();
+    const parsed = JSON.parse(jsonStr);
+    return Array.isArray(parsed) ? parsed : [parsed];
   }
 
   async writeMail(job, links) {
