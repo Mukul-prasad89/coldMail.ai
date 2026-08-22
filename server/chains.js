@@ -30,8 +30,10 @@ Only return the valid JSON array. NO markdown, NO code fences, NO commentary.
     let jsonStr = res.content.trim();
     const fenceMatch = jsonStr.match(/```(?:json)?\n([\s\S]*?)```/);
     if (fenceMatch) jsonStr = fenceMatch[1].trim();
-    const bracketMatch = jsonStr.match(/(\[[\s\S]*\])/);
-    if (bracketMatch) jsonStr = bracketMatch[1].trim();
+    const arrayMatches = jsonStr.match(/\[[\s\S]*?\]/g);
+    if (arrayMatches && arrayMatches.length > 0) {
+      jsonStr = arrayMatches[arrayMatches.length - 1].trim();
+    }
     const parsed = JSON.parse(jsonStr);
     return Array.isArray(parsed) ? parsed : [parsed];
   }
