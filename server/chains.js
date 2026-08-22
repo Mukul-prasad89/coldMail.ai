@@ -8,7 +8,7 @@ class Chain {
     this.llm = new ChatGroq({
       temperature: 0,
       apiKey: process.env.GROQ_API_KEY,
-      model: 'llama-3.3-70b-versatile',
+      model: 'qwen/qwen3.6-27b',
     });
   }
 
