@@ -57,7 +57,14 @@ Do not provide a preamble.
 `);
     const chain = prompt.pipe(this.llm);
     const res = await chain.invoke({ job_description: JSON.stringify(job), link_list: links });
-    return res.content;
+    let content = res.content.trim();
+    const subjectIdx = content.search(/^Subject:/im);
+    if (subjectIdx >= 0) return content.slice(subjectIdx).trim();
+    const dearIdx = content.search(/^Dear\s/i);
+    if (dearIdx >= 0) return content.slice(dearIdx).trim();
+    const hiIdx = content.search(/^Hi\s/i);
+    if (hiIdx >= 0) return content.slice(hiIdx).trim();
+    return content;
   }
 }
 
