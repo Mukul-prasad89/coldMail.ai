@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { ChatGroq } = require('@langchain/groq');
+const { ChatOpenRouter } = require('@langchain/openrouter');
 const { PromptTemplate } = require('@langchain/core/prompts');
 
 function truncate(text, maxLen = 3000) {
@@ -8,10 +8,13 @@ function truncate(text, maxLen = 3000) {
 
 class Chain {
   constructor() {
-    this.llm = new ChatGroq({
+    if (!process.env.OPENROUTER_API_KEY) {
+      console.warn('[Chain] OPENROUTER_API_KEY is not set. Set it in server/.env');
+    }
+    this.llm = new ChatOpenRouter({
+      model: process.env.OPENROUTER_MODEL || 'meta-llama/llama-3.3-70b-instruct',
       temperature: 0,
-      apiKey: process.env.GROQ_API_KEY,
-      model: 'qwen/qwen3.6-27b',
+      apiKey: process.env.OPENROUTER_API_KEY,
     });
   }
 
